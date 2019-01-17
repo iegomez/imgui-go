@@ -417,3 +417,14 @@ IggBool iggIsKeyPressed(int key)
 {
    return ImGui::IsKeyPressed(key);
 }
+
+IggBool iggInputText(const char* label, char* buf, long buf_size, int flags)
+{
+   return ImGui::InputText(label, buf, buf_size, flags, NULL, NULL);
+}
+
+IggBool iggInputTextMultiline(const char* label, char* buf, long buf_size, IggVec2 const *size, int flags)
+{
+   Vec2Wrapper sizeArg(size);
+   return ImGui::InputTextMultiline(label, buf, buf_size, *sizeArg, flags, NULL, NULL);
+}

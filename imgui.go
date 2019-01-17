@@ -3,6 +3,7 @@ package imgui
 // #cgo CXXFLAGS: -std=c++11
 // #include "imguiWrapper.h"
 import "C"
+import "fmt"
 
 // User fill ImGuiIO.KeyMap[] array with indices into the ImGuiIO.KeysDown[512] array
 const (
@@ -658,3 +659,34 @@ func IsItemHovered() bool {
 func IsKeyPressed(key int) bool {
 	return C.iggIsKeyPressed(C.int(key)) != 0
 }
+
+// InputText handles user input.
+func InputText(label string, buf *string, bufSize int64, flags int) bool {
+	labelArg, labelFin := wrapString(label)
+	defer labelFin()
+	bufArg, bufFin := wrapStringPointer(buf)
+	defer bufFin()
+	fmt.Printf("original: %v - %v - %v - %v\n", label, buf, bufSize, flags)
+	fmt.Printf("returned wrapped: %v - %v\n", labelArg, bufArg)
+	return C.iggInputText(labelArg, bufArg, C.long(bufSize), C.int(flags)) != 0
+}
+
+/*
+func SelectableV(label string, selected bool, flags int, size Vec2) bool {
+	labelArg, labelFin := wrapString(label)
+	defer labelFin()
+	sizeArg, _ := size.wrapped()
+	return C.iggSelectable(labelArg, castBool(selected), C.int(flags), sizeArg) != 0
+}
+
+IggBool iggInputText(const char* label, char* buf, size_t buf_size, int flags = 0)
+{
+   return ImGui::InputText(label, buf, buf_size, flags, NULL, NULL);
+}
+
+IggBool iggInputTextMultiline(const char* label, char* buf, size_t buf_size, IggVec2 const *size, ImGuiInputTextFlags flags = 0)
+{
+   Vec2Wrapper sizeArg(size);
+   return ImGui::InputTextMultiline(label, buf, buf_size, *size, flags, NULL, NULL);
+}
+*/

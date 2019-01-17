@@ -3,7 +3,10 @@ package imgui
 // #include "imguiWrapperTypes.h"
 // #include <stdlib.h>
 import "C"
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
 func castBool(value bool) (cast C.IggBool) {
 	if value {
@@ -57,5 +60,21 @@ func wrapFloat(goValue *float32) (wrapped *C.float, finisher func()) {
 func wrapString(value string) (wrapped *C.char, finisher func()) {
 	wrapped = C.CString(value)
 	finisher = func() { C.free(unsafe.Pointer(wrapped)) } // nolint: gas
+	return
+}
+
+func wrapStringPointer(value *string) (wrapped *C.char, finisher func()) {
+
+	if value != nil {
+		fmt.Printf("wrapStringPointer: %v - %v\n", value, *value)
+		wrapped = C.CString(*value)
+		fmt.Printf("C wrapped: %v\n", wrapped)
+		finisher = func() {
+			*value = C.GoString(wrapped)
+			//C.free(unsafe.Pointer(wrapped))
+		} // nolint: gas
+	} else {
+		finisher = func() {}
+	}
 	return
 }

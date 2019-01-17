@@ -111,6 +111,9 @@ extern IggBool  iggIsItemHovered(int flags);
 
 extern IggBool iggIsKeyPressed(int key);
 
+extern IggBool iggInputText(const char* label, char* buf, long buf_size, int flags);
+extern IggBool iggInputTextMultiline(const char* label, char* buf, long buf_size, IggVec2 const *size, int flags);
+
 #ifdef __cplusplus
 }
 #endif
