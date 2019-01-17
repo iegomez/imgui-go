@@ -71,7 +71,7 @@ func wrapStringPointer(value *string) (wrapped *C.char, finisher func()) {
 		fmt.Printf("C wrapped: %v\n", wrapped)
 		finisher = func() {
 			*value = C.GoString(wrapped)
-			//C.free(unsafe.Pointer(wrapped))
+			C.free(unsafe.Pointer(wrapped))
 		} // nolint: gas
 	} else {
 		finisher = func() {}
