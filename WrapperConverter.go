@@ -66,10 +66,11 @@ func wrapString(value string) (wrapped *C.char, finisher func()) {
 func wrapStringPointer(value *string) (wrapped *C.char, finisher func()) {
 
 	if value != nil {
-		fmt.Printf("wrapStringPointer: %v - %v\n", value, *value)
+		//fmt.Printf("wrapStringPointer: %v - %v\n", value, *value)
 		wrapped = C.CString(*value)
-		fmt.Printf("C wrapped: %v\n", wrapped)
+		//fmt.Printf("C wrapped: %v\n", wrapped)
 		finisher = func() {
+			fmt.Printf("gonna free this shit: %v - the value is: %v\n", unsafe.Pointer(wrapped), *value)
 			*value = C.GoString(wrapped)
 			C.free(unsafe.Pointer(wrapped))
 		} // nolint: gas

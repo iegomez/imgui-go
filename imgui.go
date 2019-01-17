@@ -3,7 +3,6 @@ package imgui
 // #cgo CXXFLAGS: -std=c++11
 // #include "imguiWrapper.h"
 import "C"
-import "fmt"
 
 // User fill ImGuiIO.KeyMap[] array with indices into the ImGuiIO.KeysDown[512] array
 const (
@@ -666,9 +665,21 @@ func InputText(label string, buf *string, bufSize int64, flags int) bool {
 	defer labelFin()
 	bufArg, bufFin := wrapStringPointer(buf)
 	defer bufFin()
-	fmt.Printf("original: %v - %v - %v - %v\n", label, buf, bufSize, flags)
-	fmt.Printf("returned wrapped: %v - %v\n", labelArg, bufArg)
+	//fmt.Printf("original: %v - %v - %v - %v\n", label, buf, bufSize, flags)
+	//fmt.Printf("returned wrapped: %v - %v\n", labelArg, bufArg)
 	return C.iggInputText(labelArg, bufArg, C.long(bufSize), C.int(flags)) != 0
+}
+
+// InputTextMultiline handles user input.
+func InputTextMultiline(label string, buf *string, bufSize int64, size Vec2, flags int) bool {
+	labelArg, labelFin := wrapString(label)
+	defer labelFin()
+	bufArg, bufFin := wrapStringPointer(buf)
+	defer bufFin()
+	sizeArg, _ := size.wrapped()
+	//fmt.Printf("original: %v - %v - %v - %v\n", label, buf, bufSize, flags)
+	//fmt.Printf("returned wrapped: %v - %v\n", labelArg, bufArg)
+	return C.iggInputTextMultiline(labelArg, bufArg, C.long(bufSize), sizeArg, C.int(flags)) != 0
 }
 
 /*
